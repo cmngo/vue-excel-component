@@ -1,9 +1,9 @@
 <template>
-    <div class="excel">
+    <div class="excel-cmp">
         <button @click="columnSort">排序</button>
 
         <div class="excel-area" >
-            <div class="table-head">
+            <div class="table-head clearfix">
                 <div class="first-col fl">
                     <table cellspacing="0" border="1">
                         <thead>
@@ -14,14 +14,16 @@
                     </table>
                 </div>
                 <div class="other-col fl">
-                    <table cellspacing="0" border="1">
-                        <thead>
-                        <tr>
-                            <td>年龄</td>
-                            <td>职位</td>
-                        </tr>
-                        </thead>
-                    </table>
+                    <div class="scorll">
+                        <table cellspacing="0" border="1">
+                            <thead>
+                            <tr>
+                                <td>年龄</td>
+                                <td>职位</td>
+                            </tr>
+                            </thead>
+                        </table>
+                     </div>
                 </div>
             </div>
             <div class="table-body clearfix" >
@@ -35,7 +37,7 @@
                     </table>
                 </div>
                 <div class="other-col fl">
-                    <div class="scorll">
+                    <div class="scorll" @scroll="rowScroll($event)">
                         <table cellspacing="0" border="1">
                             <tbody>
                             <tr v-for="(item,index) in excelList">
@@ -128,7 +130,6 @@
         },
         methods: {
             inputHandler: function (index,$event,type) {
-                console.log($event);
                 this.excelList[index][type] = $event.target.innerText;
             },
             columnSort: function () {
@@ -143,15 +144,15 @@
                         return aInput - bInput;
                     }else {
                         return aInput.localeCompare(bInput);
-//                        console.log('888888');
                     }
                 });
             },
-            freezeRow: function () {
-
+            rowScroll: function ($event) {
+                this.tableScrollLeft = $event.target.scrollLeft;
+                document.querySelectorAll('.table-head .scorll')[0].scrollLeft = this.tableScrollLeft;
             },
-            freezeCol: function () {
-
+            colScroll: function () {
+                console.log('4444');
             }
         }
     }
@@ -159,62 +160,62 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped type="text/css">
-    body {
+    .excel-cmp {
         .fl {
             float: left;
-        }
-        .fr {
-            float: right;
         }
         .clearfix:before {
             content: '';
             display: block;
             clear: both;
         }
-
+        .clearfix {
+            zoom:1;
+        }
         .excel-area {
-            width: 700px;
+            width: 520px;
             height: 200px;
             margin-top: 30px;
-            /*overflow-x:scroll;*/
 
             table {
                 width: 100%;
                 table-layout: fixed;
-
-                td {
-                    height: 30px;
-                }
             }
 
-
+            td {
+                height: 30px;
+            }
         }
 
         .table-head {
-            padding-right: 17px;
+            height:37px;
+            .other-col {
+                height: 36px;
+                overflow: hidden;
+            }
         }
 
         .table-body {
             height: 200px;
-            margin-top: -2px;
-            /*overflow-y: scroll;*/
+            margin-top: -1px;
+            overflow-y: scroll;
         }
 
-    .first-col {
-        width: 50px;
-    }
-    .other-col {
-        width:450px;
-
-        table {
-            width: 600px;
+        .first-col {
+            width: 50px;
         }
+        .other-col {
+            width:450px;
 
-        .scorll {
-            width: 450px;
-            overflow-x: scroll;
+            table {
+                width: 600px;
+            }
+
+            .scorll {
+                width: 450px;
+                overflow-x: scroll;
+            }
         }
-    }
 
     };
 
